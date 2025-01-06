@@ -5,7 +5,8 @@ import Register from "./pages/Register"
 import Home from "./pages/Home"
 import NotFound from "./pages/NotFound"
 import ProtectedRoute from "./components/ProtectedRoute"
-
+import AdminPanel from "./pages/AdminPanel"
+import Vregister from "./pages/vregister"
 function Logout() {
   localStorage.clear()
   return <Navigate to="/login" />
@@ -32,6 +33,8 @@ function App() {
         <Route path="/logout" element={<Logout />} />
         <Route path="/register" element={<RegisterAndLogout />} />
         <Route path="*" element={<NotFound />}></Route>
+        <Route path="/admin" element={<AdminPanel />} />
+        <Route path="/vregister/" element={<Vregister/>} />
       </Routes>
     </BrowserRouter>
   )
