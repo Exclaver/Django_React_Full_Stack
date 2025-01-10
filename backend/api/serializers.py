@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
-from .models import Note,CustomUser,Vehicle
+from .models import Note,CustomUser,Vehicle,ParkingRecord
 
 
 class VehicleSerializer(serializers.ModelSerializer):
@@ -49,10 +49,25 @@ class UserSerializer(serializers.ModelSerializer):
     def create(self,validated_data):
         user=CustomUser.objects.create_user(**validated_data)
         return user
+    
 class Noteserializer(serializers.ModelSerializer):
     class Meta:
         model=Note
         fields=["id","title","content","created_at","author"]
         extra_kwargs={"author":{"read_only":True}}
-        
+
+
+class VehicleRecordSerializer(serializers.ModelSerializer):
+    Vehicle = serializers.SlugRelatedField(slug_field='license_plate', queryset=Vehicle.objects.all())
     
+    class Meta:
+        model = ParkingRecord
+        fields = ["id", "Vehicle", "entry_time", "exit_time", "charge"]
+
+    def validate_Vehicle(self, value):
+        # `value` is already a Vehicle instance, so no need to query it again
+        if not value:  # Check if vehicle instance exists
+            raise serializers.ValidationError("Vehicle does not exist.")
+        return value
+
+   
